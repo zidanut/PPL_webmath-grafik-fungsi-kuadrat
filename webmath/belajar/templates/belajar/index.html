@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Media Pembelajaran - Fungsi Kuadrat</title>
+    <link rel="stylesheet" href="{% static 'belajar/style.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <span class="navbar-title">WebMath - Fungsi Kuadrat</span>
+        </div>
+        <div class="navbar-right">
+            <span class="navbar-user">
+                <div class="profile-photo">
+                    <img src="{% static 'images/t.png' %}" alt="Foto Profil">
+                </div>
+            </span>
+        </div>
+    </nav>
+
+    <aside class="sidebar" aria-label="Sidebar utama">
+
+        <nav class="sidebar-nav" role="navigation">
+            <ul>
+                <li><a href="{% url 'index' %}" class="{% if request.path == '/' %}active{% endif %}">Beranda</a></li>
+
+                <li class="sidebar-item has-children">
+                    <button class="dropdown-btn">
+                        Materi
+                        <span class="chev" aria-hidden="true">▾</span>
+                    </button>
+
+                    <ul id="materi-submenu" class="dropdown-container" hidden>
+                        <li><a href="{% url 'materi' %}?sub=pengantar" class="{% if request.GET.sub == 'pengantar' %}active{% endif %}">Pengantar Fungsi Kuadrat</a></li>
+                        <li><a href="{% url 'materi' %}?sub=bentuk-grafik">Bentuk Umum & Grafik</a></li>
+                        <li><a href="{% url 'materi' %}?sub=puncak-sumbu">Sumbu Simetri & Puncak</a></li>
+                        <li><a href="{% url 'quiz' %}">Kuis Akhir</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="{% url 'eksperimen' %}">Eksperimen Grafik</a></li>
+                <li><a href="#">Referensi</a></li>
+                <li><a href="#">Tentang</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="content" id="main-content" tabindex="-1">
+        <h1>Selamat Datang di Media Pembelajaran Fungsi Kuadrat</h1>
+        <p>
+            Website ini dirancang untuk membantu kamu memahami konsep fungsi kuadrat melalui pendekatan
+            <strong>inkuiri dan eksperimen digital</strong>.
+            Kamu dapat mempelajari materi, bereksperimen dengan grafik fungsi kuadrat, dan menguji
+            pemahamanmu melalui kuis interaktif.
+        </p>
+
+        <div class="card-container">
+            <div class="card">
+                <h3>Materi</h3>
+                <p>Pelajari konsep dasar dan rumus fungsi kuadrat secara interaktif.</p>
+                <a href="{% url 'materi' %}" class="btn">Buka Materi</a>
+            </div>
+
+            <div class="card">
+                <h3>Eksperimen Grafik</h3>
+                <p>Ubah nilai a, b, c untuk melihat bentuk grafik fungsi kuadrat di Desmos.</p>
+                <a href="{% url 'eksperimen' %}" class="btn">Mulai Eksperimen</a>
+            </div>
+
+            <div class="card">
+                <h3>Kuis</h3>
+                <p>Uji pemahamanmu tentang bentuk umum, puncak, dan sumbu simetri fungsi kuadrat.</p>
+                <a href="{% url 'quiz' %}" class="btn">Kerjakan Kuis</a>
+            </div>
+        </div>
+    </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const dropdownBtn = document.querySelector(".dropdown-btn");
+            const submenu = document.getElementById("materi-submenu");
+        
+            dropdownBtn.addEventListener("click", () => {
+                const expanded = dropdownBtn.getAttribute("aria-expanded") === "true";
+                dropdownBtn.setAttribute("aria-expanded", !expanded);
+                submenu.hidden = expanded;
+            });
+        });
+        </script>        
+</body>
+</html>

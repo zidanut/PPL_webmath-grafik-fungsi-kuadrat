@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Media Pembelajaran - Fungsi Kuadrat</title>
+    <link rel="stylesheet" href="{% static 'belajar/style.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <span class="navbar-title">WebMath - Fungsi Kuadrat</span>
+        </div>
+        <div class="navbar-right">
+            <span class="navbar-user">
+                <div class="profile-photo">
+                    <img src="{% static 'images/t.png' %}" alt="Foto Profil">
+                </div>
+            </span>
+        </div>
+    </nav>
+
+    <aside class="sidebar" aria-label="Sidebar utama">
+
+        <nav class="sidebar-nav" role="navigation">
+            <ul>
+                <li><a href="{% url 'index' %}">Beranda</a></li>
+
+                <li class="sidebar-item has-children">
+                    <button class="dropdown-btn" aria-expanded="false" aria-controls="materi-submenu">
+                        Materi
+                        <span class="chev" aria-hidden="true">▾</span>
+                    </button>
+
+                    <ul id="materi-submenu" class="dropdown-container" hidden>
+                        <li><a href="{% url 'materi' %}?sub=pengantar">Pengantar Fungsi Kuadrat</a></li>
+                        <li><a href="{% url 'materi' %}?sub=bentuk-grafik">Bentuk Umum & Grafik</a></li>
+                        <li><a href="{% url 'materi' %}?sub=puncak-sumbu">Sumbu Simetri & Puncak</a></li>
+                        <li><a href="{% url 'quiz' %}">Kuis Akhir</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="{% url 'eksperimen' %}" class="{% if request.path == '/eksperimen/' %}active{% endif %}">Eksperimen Grafik</a></li>
+                <li><a href="#">Referensi</a></li>
+                <li><a href="#">Tentang</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="content" id="main-content" tabindex="-1">
+        <h1>Eksperimen Digital: Fungsi Kuadrat</h1>
+        <p>Ubah nilai a, b, dan c untuk melihat bagaimana grafik fungsi kuadrat berubah.</p>
+
+        <div id="calculator" style="width: 100%; height: 500px;"></div>
+
+        <div class="controls-container">
+            <div class="controls">
+              <label>a: <input type="number" id="a" value="1" step="0.1"></label>
+              <label>b: <input type="number" id="b" value="0" step="0.1"></label>
+              <label>c: <input type="number" id="c" value="0" step="0.1"></label>
+            </div>
+        </div>
+
+        <hr style="margin: 40px 0; border: none; border-top: 2px solid #ddd;">
+
+        <h2 style="text-align:center; margin-bottom: 10px;">Perbandingan dengan GeoGebra</h2>
+
+        <div class="graph-comparison">
+            <div class="graph-container">
+                <h3>GeoGebra Graph</h3>
+                <div id="geogebra-app"></div>
+            </div>
+        </div>
+    </main>
+    <script src="https://www.desmos.com/api/v1.11/calculator.js?apiKey=52182cb87d4f4c419ac82c1862c11e05"></script>
+    <script src="https://www.geogebra.org/apps/deployggb.js"></script>
+    <script>
+        const elt = document.getElementById('calculator');
+        const calculator = Desmos.GraphingCalculator(elt);
+
+        let a = 1, b = 0, c = 0;
+        calculator.setExpression({ id: 'graph1', latex: `y=${a}x^2+${b}x+${c}` });
+
+        const params = {
+            appName: "graphing",
+            width: 800,
+            height: 400,
+            showToolBar: false,
+            showMenuBar: false,
+            showAlgebraInput: false,
+            enableShiftDragZoom: true,
+            perspective: "G",
+            id: "ggbApplet"
+        };
+        const ggbApp = new GGBApplet(params, true);
+        window.addEventListener("load", () => ggbApp.inject('geogebra-app'));
+
+        window.ggbOnInit = function(api) {
+            api.evalCommand(`f(x)=${a}x^2+${b}x+${c}`);
+        };
+
+        function updateGraphs() {
+            a = parseFloat(document.getElementById('a').value);
+            b = parseFloat(document.getElementById('b').value);
+            c = parseFloat(document.getElementById('c').value);
+
+            calculator.setExpression({ id: 'graph1', latex: `y=${a}x^2+${b}x+${c}` });
+
+            if (window.ggbApplet) {
+            ggbApplet.evalCommand(`f(x)=${a}x^2+${b}x+${c}`);
+            }
+        }
+
+        document.querySelectorAll('.controls input').forEach(input => {
+            input.addEventListener('input', updateGraphs);
+        });
+
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            const dropdownBtn = document.querySelector(".dropdown-btn");
+            const submenu = document.getElementById("materi-submenu");
+        
+            dropdownBtn.addEventListener("click", () => {
+                const expanded = dropdownBtn.getAttribute("aria-expanded") === "true";
+                dropdownBtn.setAttribute("aria-expanded", !expanded);
+                submenu.hidden = expanded;
+            });
+        });
+    </script>        
+</body>
+</html>
